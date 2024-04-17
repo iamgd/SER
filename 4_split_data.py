@@ -1,18 +1,19 @@
 import pandas as pd
+from sklearn.model_selection import train_test_split
 
-# Load the scaled data from the Excel file
-df_scaled = pd.read_excel("scaled_output_data.xlsx")
+# Load the scaled MFCC features from the Excel file
+df = pd.read_excel("scaled_output_data.xlsx")
 
 # Split the data into training and testing sets
-df_training = df_scaled[:100]  # Select the first 100 rows for training
-df_testing = df_scaled[100:138]  # Select the next 38 rows for testing
+train_df, test_df = train_test_split(df, test_size=0.2, random_state=42)
 
-# Create a new Excel writer object
-with pd.ExcelWriter("split_data.xlsx", engine="xlsxwriter") as writer:
-    # Write training data to a new sheet named "Training"
-    df_training.to_excel(writer, sheet_name="Training", index=False)
+# Create a new Excel file
+output_excel_file = "train_test_data.xlsx"
+with pd.ExcelWriter(output_excel_file) as writer:
+    # Write the training data to the first sheet
+    train_df.to_excel(writer, sheet_name='Training', index=False)
 
-    # Write testing data to a new sheet named "Testing"
-    df_testing.to_excel(writer, sheet_name="Testing", index=False)
+    # Write the testing data to the second sheet
+    test_df.to_excel(writer, sheet_name='Testing', index=False)
 
-print("Split data saved successfully to split_data.xlsx")
+print("Data split and saved successfully.")

@@ -41,6 +41,12 @@ def save_features_to_excel(features_dict, output_file):
             'MFCC_13': [mfccs[12]],
         })
 
+        # Extract emotion from the audio file name
+        emotion = os.path.basename(audio_file).split('_')[-1].split('.')[0]
+        
+        # Add 'Emotion' column
+        file_df['Emotion'] = emotion
+        
         # Append DataFrame to main DataFrame
         df = pd.concat([df, file_df], ignore_index=True)
 
@@ -66,5 +72,5 @@ output_excel_file = "output_data.xlsx"
 # Extract features from all audio files in the output folder
 data = process_audio_folder(output_folder)
 
-# Save features to Excel file
+# Save features to Excel file with emotion labels
 save_features_to_excel(data, output_excel_file)

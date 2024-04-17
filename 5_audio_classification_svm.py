@@ -1,29 +1,37 @@
 import pandas as pd
-from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
-from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.metrics import classification_report
+from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import train_test_split
 
-# Load the data from split_data.xlsx
-df = pd.read_excel("split_data.xlsx", sheet_name="Training")
+# Load the training data from the Excel file
+train_data = pd.read_excel("train_test_data.xlsx", sheet_name='Training')
 
-# Separate features (MFCCs) and target variable (emotion labels)
-X = df.drop(columns=['Audio File'])  # Features
-y = df['Emotion']  # Target variable
+# Separate features (MFCCs) and target variable (Emotion)
+X_train = train_data.drop(columns=['Audio File', 'Emotion'])
+y_train = train_data['Emotion']
 
-# Split the data into training and testing sets (80% train, 20% test)
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-# Initialize SVM classifier
+# Initialize the SVM classifier
 svm_classifier = SVC(kernel='linear')
 
-# Train the SVM classifier
+# Fit the classifier to the training data
 svm_classifier.fit(X_train, y_train)
 
-# Evaluate the classifier
+# Load the testing data from the Excel file
+test_data = pd.read_excel("train_test_data.xlsx", sheet_name='Testing')
+
+# Separate features (MFCCs) and target variable (Emotion)
+X_test = test_data.drop(columns=['Audio File', 'Emotion'])
+y_test = test_data['Emotion']
+
+# Predict emotions for the testing data
 y_pred = svm_classifier.predict(X_test)
 
-# Print classification report and confusion matrix
-print("Classification Report:")
-print(classification_report(y_test, y_pred))
-print("\nConfusion Matrix:")
-print(confusion_matrix(y_test, y_pred))
+# Evaluate the classifier
+report = classification_report(y_test, y_pred, output_dict=True)
+
+# Convert report to DataFrame
+report_df = pd.DataFrame(report).transpose()
+
+# Save classification report to Excel file
+report_df.to_excel("classify_report_svm.xlsx")

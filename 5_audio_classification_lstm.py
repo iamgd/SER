@@ -1,41 +1,72 @@
 import pandas as pd
-import numpy as np
+from sklearn.metrics import classification_report
+from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from keras.models import Sequential
 from keras.layers import LSTM, Dense
-from sklearn.preprocessing import LabelEncoder
+from keras.utils import to_categorical
 
-# Load the data from split_data.xlsx
-df = pd.read_excel("split_data.xlsx", sheet_name="Training")
+# Load the training data from the Excel file
+train_data = pd.read_excel("train_test_data.xlsx", sheet_name='Training')
 
-# Separate features (MFCCs) and target variable (emotion labels)
-X = df.drop(columns=['Audio File'])  # Features
-y = df['Emotion']  # Target variable
-
-# Encode labels to numerical values
+# Encode the target variable
 label_encoder = LabelEncoder()
-y = label_encoder.fit_transform(y)
+train_data['Emotion'] = label_encoder.fit_transform(train_data['Emotion'])
+# Store the mapping of encoded labels to original labels
+label_mapping = dict(zip(range(len(label_encoder.classes_)), label_encoder.classes_))
 
-# Reshape features for LSTM input (samples, time steps, features)
-X = np.array(X)
-X = X.reshape(X.shape[0], 1, X.shape[1])
+# Separate features (MFCCs) and target variable (Emotion)
+X_train = train_data.drop(columns=['Audio File', 'Emotion'])
+y_train = train_data['Emotion']
 
-# Split the data into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+# Reshape X_train to 3D tensor for LSTM input
+X_train_lstm = X_train.values.reshape(X_train.shape[0], X_train.shape[1], 1)
 
-# Build LSTM model
+# Convert target variable to categorical
+y_train_categorical = to_categorical(y_train)
+
+# Define the LSTM model
 model = Sequential()
-model.add(LSTM(128, input_shape=(X_train.shape[1], X_train.shape[2])))
-model.add(Dense(64, activation='relu'))
-model.add(Dense(7, activation='softmax'))  # Output layer with 7 classes
-model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+model.add(LSTM(128, input_shape=(X_train_lstm.shape[1], X_train_lstm.shape[2])))
+model.add(Dense(len(label_encoder.classes_), activation='softmax'))
 
-# Train the model
-model.fit(X_train, y_train, epochs=50, batch_size=32, validation_data=(X_test, y_test))
+# Compile the model
+model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
-# Evaluate the model
-loss, accuracy = model.evaluate(X_test, y_test)
-print(f"Test Accuracy: {accuracy}")
+# Fit the model to the training data
+model.fit(X_train_lstm, y_train_categorical, epochs=10, batch_size=32)
 
-# Make predictions
-predictions = model.predict(X_test)
+# Load the testing data from the Excel file
+test_data = pd.read_excel("train_test_data.xlsx", sheet_name='Testing')
+
+# Encode the target variable
+test_data['Emotion'] = label_encoder.transform(test_data['Emotion'])
+
+# Separate features (MFCCs) and target variable (Emotion)
+X_test = test_data.drop(columns=['Audio File', 'Emotion'])
+y_test = test_data['Emotion']
+
+# Reshape X_test to 3D tensor for LSTM input
+X_test_lstm = X_test.values.reshape(X_test.shape[0], X_test.shape[1], 1)
+
+# Convert target variable to categorical
+y_test_categorical = to_categorical(y_test)
+
+# Predict probabilities for each class for the testing data
+y_pred_probabilities = model.predict(X_test_lstm)
+
+# Get the predicted class labels
+y_pred = y_pred_probabilities.argmax(axis=1)
+
+# Convert the predicted and true labels back to their original emotion names
+y_pred_emotions = [label_mapping[label] for label in y_pred]
+y_true_emotions = [label_mapping[label] for label in y_test]
+
+# Evaluate the classifier
+report = classification_report(y_true_emotions, y_pred_emotions, output_dict=True)
+
+# Convert report to DataFrame
+report_df = pd.DataFrame(report).transpose()
+
+# Save classification report to Excel file
+report_df.to_excel("classify_report_lstm.xlsx")
