@@ -1,54 +1,52 @@
 import os
-import librosa
-import pandas as pd
+from pydub import AudioSegment
+import numpy as np
+from scipy.signal import butter, lfilter
 
-def extract_mfcc(audio_file, sr=22050, n_mfcc=13):
-    # Load audio file
-    y, _ = librosa.load(audio_file, sr=sr)
+def butter_lowpass(cutoff, fs, order=3):
+    nyquist = 0.5 * fs
+    normal_cutoff = cutoff / nyquist
+    b, a = butter(order, normal_cutoff, btype='low', analog=False)
+    return b, a
 
-    # Extract MFCCs
-    mfccs = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=n_mfcc)
+def apply_lowpass_filter(data, cutoff_freq, fs, order=3):
+    b, a = butter_lowpass(cutoff_freq, fs, order=order)
+    y = lfilter(b, a, data)
+    return y.astype(np.int16)
 
-    return mfccs.T  # Transpose to have MFCC coefficients as columns and frames as rows
+def noise_reduction_with_lowpass(audio_path, output_path, cutoff_freq=2000, order=3):
+    # Create output folder if it doesn't exist
+    if not os.path.exists(output_path):
+        os.makedirs(output_path)
+    
+    # List all audio files in the input folder
+    audio_files = [f for f in os.listdir(audio_path) if f.endswith(('.wav', '.mp3', '.ogg'))]
+    
+    for file in audio_files:
+        # Load audio file
+        audio = AudioSegment.from_file(os.path.join(audio_path, file))
 
-def extract_features_from_folder(audio_folder):
-    features_dict = {}
+        # Convert audio to numpy array
+        audio_data = np.array(audio.get_array_of_samples())
 
-    # List all audio files in the folder
-    audio_files = [os.path.join(audio_folder, f) for f in os.listdir(audio_folder) if f.endswith('.wav')]
+        # Apply low-pass filter for noise reduction
+        filtered_audio_data = apply_lowpass_filter(audio_data, cutoff_freq, audio.frame_rate, order)
 
-    # Extract features for each audio file
-    for audio_file in audio_files:
-        features = extract_mfcc(audio_file)
-        features_dict[audio_file] = features
+        # Convert back to audio
+        cleaned_audio = AudioSegment(
+            filtered_audio_data.tobytes(),
+            frame_rate=audio.frame_rate,
+            sample_width=audio.sample_width,
+            channels=audio.channels
+        )
 
-    return features_dict
-
-def save_features_to_excel(features_dict, output_file):
-    # Initialize DataFrame
-    df = pd.DataFrame()
-
-    for audio_file, features in features_dict.items():
-        # Create DataFrame for current audio file
-        file_df = pd.DataFrame(features, columns=[f'MFCC_{i+1}' for i in range(features.shape[1])])
-
-        # Add the 'Audio File' column
-        file_df['Audio File'] = audio_file
-
-        # Append DataFrame to main DataFrame
-        df = pd.concat([df, file_df], ignore_index=True)
-
-    # Write DataFrame to Excel file
-    df.to_excel(output_file, index=False)
-    print(f"Features saved to {output_file}")
+        # Save cleaned audio in the output folder
+        cleaned_audio.export(os.path.join(output_path, f"cleaned_{file}"), format="wav")
+        print(f"Cleaned audio saved to {os.path.join(output_path, f'cleaned_{file}')}")
 
 # Example usage
 if __name__ == "__main__":
-    audio_folder = "output"  # Assuming cleaned audio files are in the 'output' folder
-    output_excel_file = "features.xlsx"
-
-    # Extract features from the cleaned audio files
-    features_dict = extract_features_from_folder(audio_folder)
-
-    # Save features to Excel file
-    save_features_to_excel(features_dict, output_excel_file)
+    audio_folder = "dataset"
+    output_folder = "output"
+    
+    noise_reduction_with_lowpass(audio_folder, output_folder)
