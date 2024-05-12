@@ -39,8 +39,8 @@ pip install pandas scikit-learn numpy librosa pydub scipy keras tensorflow seabo
 
 - 5_audio_classification_cnn - in this the audio classification is done using CNN classifier and the output is saved as classify_report_cnn.xlsx
 
-- 6_confusion_matrix_svm - in this the confusion matrix and confusion metrics are created using svm and saved as confusion_matrix_svm.png
+- 6_confusion_matrix_svm - in this the confusion matrix and confusion metrics are created using SVM and saved as confusion_matrix_svm.png
 
-- 6_confusion_matrix_lstm - in this the confusion matrix and confusion metrics are created using lstm and saved as confusion_matrix_lstm.png
+- 6_confusion_matrix_lstm - in this the confusion matrix and confusion metrics are created using LSTM and saved as confusion_matrix_lstm.png
 
-- 6_confusion_matrix_cnn - in this the confusion matrix and confusion metrics are created using cnn and saved as confusion_matrix_cnn.png
+- 6_confusion_matrix_cnn - in this the confusion matrix and confusion metrics are created using CNN and saved as confusion_matrix_cnn.png
