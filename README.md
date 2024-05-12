@@ -33,14 +33,14 @@ pip install pandas scikit-learn numpy librosa pydub scipy keras tensorflow seabo
 
 - 4_split_data is done and the output is saved as 2sheets one for training and other for testing as train_test_data.xlsx
 
-- 5_audio_classification_svm - in this the audio classification is done using SVM classifier and the output is saved as classify_report_svm.xlsx
+- 5_audio_classification_svm - here the audio classification is done using SVM classifier and the output is saved as classify_report_svm.xlsx
 
-- 5_audio_classification_lstm - in this the audio classification is done using LSTM classifier and the output is saved as classify_report_lstm.xlsx
+- 5_audio_classification_lstm - here the audio classification is done using LSTM classifier and the output is saved as classify_report_lstm.xlsx
 
-- 5_audio_classification_cnn - in this the audio classification is done using CNN classifier and the output is saved as classify_report_cnn.xlsx
+- 5_audio_classification_cnn - here the audio classification is done using CNN classifier and the output is saved as classify_report_cnn.xlsx
 
-- 6_confusion_matrix_svm - in this the confusion matrix and confusion metrics are created using SVM and saved as confusion_matrix_svm.png
+- 6_confusion_matrix_svm - here confusion matrix and confusion metrics are created using SVM and saved as confusion_matrix_svm.png
 
-- 6_confusion_matrix_lstm - in this the confusion matrix and confusion metrics are created using LSTM and saved as confusion_matrix_lstm.png
+- 6_confusion_matrix_lstm - here confusion matrix and confusion metrics are created using LSTM and saved as confusion_matrix_lstm.png
 
-- 6_confusion_matrix_cnn - in this the confusion matrix and confusion metrics are created using CNN and saved as confusion_matrix_cnn.png
+- 6_confusion_matrix_cnn - here confusion matrix and confusion metrics are created using CNN and saved as confusion_matrix_cnn.png
