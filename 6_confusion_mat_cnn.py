@@ -1,7 +1,9 @@
 import pandas as pd
-from sklearn.metrics import classification_report
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.metrics import confusion_matrix
 from sklearn.preprocessing import LabelEncoder
-from sklearn.model_selection import train_test_split
 from keras.models import Sequential
 from keras.layers import Conv1D, MaxPooling1D, Flatten, Dense
 from keras.utils import to_categorical
@@ -67,11 +69,54 @@ y_pred = y_pred_probabilities.argmax(axis=1)
 y_pred_emotions = [label_mapping[label] for label in y_pred]
 y_true_emotions = [label_mapping[label] for label in y_test]
 
-# Evaluate the classifier
-report = classification_report(y_true_emotions, y_pred_emotions, output_dict=True)
+# Generate confusion matrix
+conf_matrix = confusion_matrix(y_true_emotions, y_pred_emotions)
 
-# Convert report to DataFrame
-report_df = pd.DataFrame(report).transpose()
+# Calculate accuracy
+accuracy = conf_matrix.diagonal().sum() / conf_matrix.sum()
 
-# Save classification report to Excel file
-report_df.to_excel("classify_report_cnn.xlsx")
+# Calculate misclassification rate
+misclassification_rate = 1 - accuracy
+
+# Calculate precision for each class
+precision = conf_matrix.diagonal() / conf_matrix.sum(axis=0)
+# Handle division by zero
+precision = np.nan_to_num(precision, nan=0)
+
+
+# Calculate sensitivity (recall) for each class
+sensitivity = conf_matrix.diagonal() / conf_matrix.sum(axis=1)
+
+# Calculate specificity for each class
+specificity = [(conf_matrix.sum() - conf_matrix[:, i].sum() - conf_matrix[i, :].sum() + conf_matrix[i, i]) /
+               (conf_matrix.sum() - conf_matrix[:, i].sum()) for i in range(conf_matrix.shape[0])]
+
+# Calculate mean precision, sensitivity, and specificity
+# Calculate mean precision
+mean_precision = precision.mean()
+mean_sensitivity = sensitivity.mean()
+mean_specificity = sum(specificity) / len(specificity)
+
+# Create a DataFrame for better visualization
+labels = sorted(set(y_true_emotions) | set(y_pred_emotions))
+conf_matrix_df = pd.DataFrame(conf_matrix, index=labels, columns=labels)
+
+# Plot confusion matrix
+plt.figure(figsize=(10, 8))
+sns.heatmap(conf_matrix_df, annot=True, fmt='d', cmap='Blues')
+plt.xlabel('Predicted Label')
+plt.ylabel('True Label')
+plt.title('Confusion Matrix (CNN)')
+plt.savefig("confusion_matrix_cnn.png")  # Save confusion matrix as an image file
+plt.show()
+
+# Describe the confusion matrix
+print("\nConfusion Matrix:\n", conf_matrix_df)
+
+
+# Print the metrics
+print("\nAccuracy:", accuracy)
+print("Misclassification Rate:", misclassification_rate)
+print("\nMean Precision:", mean_precision)
+print("Mean Sensitivity (Recall):", mean_sensitivity)
+print("Mean Specificity:", mean_specificity)
