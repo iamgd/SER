@@ -13,10 +13,12 @@ Ensure you have Python installed on your system. You can download and install Py
 - pydub: For audio processing and manipulation.
 - SciPy: For signal processing and filtering.
 - Keras with TensorFlow backend: For building and training deep learning models.
+- seaborn: For statistical data visualization based on matplotlib.
+- matplotlib: For creating static, animated, and interactive visualizations in Python.
 
 **You can install these libraries using pip:**
 
-pip install pandas scikit-learn numpy librosa pydub scipy keras tensorflow
+pip install pandas scikit-learn numpy librosa pydub scipy keras tensorflow seaborn matplotlib
 
 
 ***Steps for running this project:***
@@ -35,4 +37,10 @@ pip install pandas scikit-learn numpy librosa pydub scipy keras tensorflow
 
 - 5_audio_classification_lstm - in this the audio classification is done using LSTM classifier and the output is saved as classify_report_lstm.xlsx
 
-- 5_audio_classification_cnn - in this the audio classification is done using CNN classifier and the output is saved as classify_report_cnn.xlsx  
+- 5_audio_classification_cnn - in this the audio classification is done using CNN classifier and the output is saved as classify_report_cnn.xlsx
+
+- 6_confusion_matrix_svm - in this the confusion matrix and confusion metrics are created using SVM and saved as confusion_matrix_svm.png
+
+- 6_confusion_matrix_lstm - in this the confusion matrix and confusion metrics are created using LSTM and saved as confusion_matrix_lstm.png
+
+- 6_confusion_matrix_cnn - in this the confusion matrix and confusion metrics are created using CNN and saved as confusion_matrix_cnn.png
