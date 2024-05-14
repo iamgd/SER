@@ -1,8 +1,9 @@
 from sklearn.preprocessing import StandardScaler
 import pandas as pd
+import os
 
 # Load the extracted features from the Excel file
-df = pd.read_excel("output_data.xlsx")
+df = pd.read_excel("D:/MCA/4th sem/SER3/output/Actor_01/output_data.xlsx")
 
 # Separate the MFCC features
 mfcc_columns = [col for col in df.columns if col.startswith('MFCC')]
@@ -28,6 +29,7 @@ scaled_df_mfcc = scaled_df_mfcc[column_order]
 # Display the scaled MFCC DataFrame
 print(scaled_df_mfcc.head())
 
-# Save the scaled MFCC features to a new Excel file
-scaled_mfcc_excel_file = "scaled_output_data.xlsx"
+# Save the scaled MFCC features to a new Excel file in the output folder
+output_folder = "D:/MCA/4th sem/SER3/output/Actor_01"
+scaled_mfcc_excel_file = os.path.join(output_folder, "scaled_output_data.xlsx")
 scaled_df_mfcc.to_excel(scaled_mfcc_excel_file, index=False)

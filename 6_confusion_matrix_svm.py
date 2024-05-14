@@ -5,9 +5,10 @@ from sklearn.metrics import confusion_matrix
 from sklearn.svm import SVC
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
+import os
 
 # Load the training data from the Excel file
-train_data = pd.read_excel("train_test_data.xlsx", sheet_name='Training')
+train_data = pd.read_excel("D:/MCA/4th sem/SER3/output/Actor_01/train_test_data.xlsx", sheet_name='Training')
 
 # Separate features (MFCCs) and target variable (Emotion)
 X_train = train_data.drop(columns=['Audio File', 'Emotion'])
@@ -20,7 +21,7 @@ svm_classifier = SVC(kernel='linear')
 svm_classifier.fit(X_train, y_train)
 
 # Load the testing data from the Excel file
-test_data = pd.read_excel("train_test_data.xlsx", sheet_name='Testing')
+test_data = pd.read_excel("D:/MCA/4th sem/SER3/output/Actor_01/train_test_data.xlsx", sheet_name='Testing')
 
 # Separate features (MFCCs) and target variable (Emotion)
 X_test = test_data.drop(columns=['Audio File', 'Emotion'])
@@ -44,7 +45,7 @@ plt.ylabel('True Label')
 plt.title('Confusion Matrix (SVM)')
 
 # Save confusion matrix plot as an image file
-plt.savefig("confusion_matrix_svm.png")
+plt.savefig(os.path.join("D:/MCA/4th sem/SER3/output/Actor_01", "confusion_matrix_svm.png"))
 
 # Show the confusion matrix plot
 plt.show()

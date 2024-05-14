@@ -7,9 +7,10 @@ from sklearn.preprocessing import LabelEncoder
 from keras.models import Sequential
 from keras.layers import Conv1D, MaxPooling1D, Flatten, Dense
 from keras.utils import to_categorical
+import os
 
 # Load the training data from the Excel file
-train_data = pd.read_excel("train_test_data.xlsx", sheet_name='Training')
+train_data = pd.read_excel("D:/MCA/4th sem/SER3/output/Actor_01/train_test_data.xlsx", sheet_name='Training')
 
 # Encode the target variable
 label_encoder = LabelEncoder()
@@ -44,7 +45,7 @@ model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accur
 model.fit(X_train_cnn, y_train_categorical, epochs=20, batch_size=64)
 
 # Load the testing data from the Excel file
-test_data = pd.read_excel("train_test_data.xlsx", sheet_name='Testing')
+test_data = pd.read_excel("D:/MCA/4th sem/SER3/output/Actor_01/train_test_data.xlsx", sheet_name='Testing')
 
 # Encode the target variable
 test_data['Emotion'] = label_encoder.transform(test_data['Emotion'])
@@ -107,11 +108,11 @@ sns.heatmap(conf_matrix_df, annot=True, fmt='d', cmap='Blues')
 plt.xlabel('Predicted Label')
 plt.ylabel('True Label')
 plt.title('Confusion Matrix (CNN)')
-plt.savefig("confusion_matrix_cnn.png")  # Save confusion matrix as an image file
+plt.savefig(os.path.join("D:/MCA/4th sem/SER3/output/Actor_01", "confusion_matrix_cnn.png"))  # Save confusion matrix as an image file
 plt.show()
 
 # Describe the confusion matrix
-print("\nConfusion Matrix:\n", conf_matrix_df)
+print("\nConfusion Matrix (CNN):\n", conf_matrix_df)
 
 
 # Print the metrics

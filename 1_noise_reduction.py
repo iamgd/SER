@@ -46,7 +46,7 @@ def noise_reduction_with_lowpass(audio_path, output_path, cutoff_freq=2000, orde
 
 # Example usage
 if __name__ == "__main__":
-    audio_folder = "dataset"
-    output_folder = "output"
+    audio_folder = "D:/MCA/4th sem/SER3/dataset/Actor_01"
+    output_folder = "D:/MCA/4th sem/SER3/output/Actor_01"
     
     noise_reduction_with_lowpass(audio_folder, output_folder)

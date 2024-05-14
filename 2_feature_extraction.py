@@ -15,7 +15,7 @@ def extract_audio_features(audio_file):
     
     return mean_mfccs
 
-def save_features_to_excel(features_dict, output_file):
+def save_features_to_excel(features_dict, output_folder):
     # Initialize DataFrame
     df = pd.DataFrame()
 
@@ -51,7 +51,8 @@ def save_features_to_excel(features_dict, output_file):
         df = pd.concat([df, file_df], ignore_index=True)
 
     # Write DataFrame to Excel file
-    df.to_excel(output_file, index=False)
+    output_excel_file = os.path.join(output_folder, "output_data.xlsx")
+    df.to_excel(output_excel_file, index=False)
 
 def process_audio_folder(folder):
     data = {}
@@ -66,11 +67,11 @@ def process_audio_folder(folder):
     return data
 
 # Example usage
-output_folder = "output"
+output_folder = "D:/MCA/4th sem/SER3/output/Actor_01"
 output_excel_file = "output_data.xlsx"
 
 # Extract features from all audio files in the output folder
 data = process_audio_folder(output_folder)
 
 # Save features to Excel file with emotion labels
-save_features_to_excel(data, output_excel_file)
+save_features_to_excel(data, output_folder)

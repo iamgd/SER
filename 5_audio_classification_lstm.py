@@ -5,9 +5,10 @@ from sklearn.model_selection import train_test_split
 from keras.models import Sequential
 from keras.layers import LSTM, Dense
 from keras.utils import to_categorical
+import os
 
 # Load the training data from the Excel file
-train_data = pd.read_excel("train_test_data.xlsx", sheet_name='Training')
+train_data = pd.read_excel("D:/MCA/4th sem/SER3/output/Actor_01/train_test_data.xlsx", sheet_name='Training')
 
 # Encode the target variable
 label_encoder = LabelEncoder()
@@ -37,7 +38,7 @@ model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accur
 model.fit(X_train_lstm, y_train_categorical, epochs=10, batch_size=32)
 
 # Load the testing data from the Excel file
-test_data = pd.read_excel("train_test_data.xlsx", sheet_name='Testing')
+test_data = pd.read_excel("D:/MCA/4th sem/SER3/output/Actor_01/train_test_data.xlsx", sheet_name='Testing')
 
 # Encode the target variable
 test_data['Emotion'] = label_encoder.transform(test_data['Emotion'])
@@ -68,5 +69,11 @@ report = classification_report(y_true_emotions, y_pred_emotions, output_dict=Tru
 # Convert report to DataFrame
 report_df = pd.DataFrame(report).transpose()
 
+# Specify the full path for the output Excel file
+output_folder = "D:/MCA/4th sem/SER3/output/Actor_01"
+output_excel_file = os.path.join(output_folder, "classify_report_lstm.xlsx")
+
 # Save classification report to Excel file
-report_df.to_excel("classify_report_lstm.xlsx")
+report_df.to_excel(output_excel_file)
+
+print("Classification report saved successfully.")
