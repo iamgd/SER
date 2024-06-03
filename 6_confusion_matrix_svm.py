@@ -50,6 +50,7 @@ plt.savefig(os.path.join("D:/MCA/4th sem/SER3/output/Actor_01", "confusion_matri
 # Show the confusion matrix plot
 plt.show()
 
+
 # Describe the confusion matrix
 print("Confusion Matrix (SVM):\n", conf_matrix_df)
 
