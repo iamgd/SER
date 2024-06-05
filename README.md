@@ -15,10 +15,14 @@ Ensure you have Python installed on your system. You can download and install Py
 - Keras with TensorFlow backend: For building and training deep learning models.
 - seaborn: For statistical data visualization based on matplotlib.
 - matplotlib: For creating static, animated, and interactive visualizations in Python.
+- standardscaler: For scaling features to a standard distribution.
+- soundfile: For reading and writing audio files, for saving temp audio files.
+- tensorflow: For loading and running pre-trained neural network models.
+- gradio: For building web-based UIs for machine learing models
 
 **You can install these libraries using pip:**
 
-pip install pandas scikit-learn numpy librosa pydub scipy keras tensorflow seaborn matplotlib
+pip install pandas scikit-learn soundfile joblib numpy librosa pydub scipy keras tensorflow seaborn matplotlib gradio 
 
 
 ***Steps for running this project:***
@@ -44,3 +48,16 @@ pip install pandas scikit-learn numpy librosa pydub scipy keras tensorflow seabo
 - 6_confusion_matrix_lstm - here confusion matrix and confusion metrics are created using LSTM and saved as confusion_matrix_lstm.png
 
 - 6_confusion_matrix_cnn - here confusion matrix and confusion metrics are created using CNN and saved as confusion_matrix_cnn.png
+
+- 7_train_cnn - here a CNN model is created using the training phase in the train_test_data file and saved as cnn_model.h5 under the models folder
+
+- 7_train_lstm - here a LSTM model is created using the training phase in the train_test_data file and saved as lstm_model.h5 under the models folder
+
+- 7_train_svm - here a SVM model is created using the training phase in the train_test_data file and saved as svm_model.pk1 under the models folder
+
+- 8_ser_ui_1 - here a UI is created using gradio for loading or capturing the audio files and using machine learning the emotion is the audio is predicted using SVM model
+
+- 8_ser_ui_ - here a UI is created using gradio for loading or capturing the audio files and using machine learning the emotion is the audio is predicted using all 3 models
+
+
+If you have any doubts or queries feel free to post your quries to this mail id: gdisgd4004@gmail.com
