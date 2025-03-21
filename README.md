@@ -60,4 +60,4 @@ pip install pandas scikit-learn soundfile joblib numpy librosa pydub scipy keras
 - 8_ser_ui_ - here a UI is created using gradio for loading or capturing the audio files and using machine learning the emotion is the audio is predicted using all 3 models
 
 
-If you have any doubts or queries feel free to post your quries to this mail id: gdisgd4004@gmail.com
+If you have any doubts or queries feel free to post your queries to this mail id: gdisgd4004@gmail.com
